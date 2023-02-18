@@ -1,6 +1,7 @@
 import re
 import string
 import unicodedata
+from typing import Dict
 
 langs = ['ab', 'ar', 'as', 'br', 'ca', 'cnh', 'cs', 'cv', 'cy', 'de', 'dv', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fa',
          'fi', 'fr', 'fy-NL', 'ga-IE', 'hi', 'hsb', 'hu', 'ia', 'id', 'it', 'ja', 'ka', 'kab', 'ky', 'lg', 'lt', 'lv',
@@ -8,12 +9,29 @@ langs = ['ab', 'ar', 'as', 'br', 'ca', 'cnh', 'cs', 'cv', 'cy', 'de', 'dv', 'el'
          'sv-SE', 'ta', 'th', 'tr', 'tt', 'uk', 'vi', 'vot', 'zh-CN', 'zh-HK', 'zh-TW']
 
 
-def fun_en(batch):
-    sent = batch["sentence"].lower()
+def fun_en(batch: Dict[str, str]) -> Dict[str, str]:
+    """
+    Normalize an English sentence.
+    
+    batch: {
+        "sentence": <str>,
+    }
+
+    [return] {
+        "sentence": <str>,
+    }
+    """
+    sent: str = batch["sentence"]
+
+    sent = sent.lower()
     # normalize apostrophes
     sent = sent.replace("’", "'")
     # replace non-alpha characters with space
-    sent = "".join(ch if ch.isalpha() or ch == "'" else " " for ch in sent)
+    sent = "".join(
+        ch 
+        if ch.isalpha() or ch == "'" else 
+        " " 
+        for ch in sent)
     # remove repeated spaces
     sent = " ".join(sent.split())
     batch["sentence"] = sent
