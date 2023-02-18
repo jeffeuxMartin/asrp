@@ -8,6 +8,18 @@ langs = ['ab', 'ar', 'as', 'br', 'ca', 'cnh', 'cs', 'cv', 'cy', 'de', 'dv', 'el'
          'sv-SE', 'ta', 'th', 'tr', 'tt', 'uk', 'vi', 'vot', 'zh-CN', 'zh-HK', 'zh-TW']
 
 
+def fun_en(batch):
+    sent = batch["sentence"].lower()
+    # normalize apostrophes
+    sent = sent.replace("’", "'")
+    # replace non-alpha characters with space
+    sent = "".join(ch if ch.isalpha() or ch == "'" else " " for ch in sent)
+    # remove repeated spaces
+    sent = " ".join(sent.split())
+    batch["sentence"] = sent
+    return batch
+
+
 def fun_ar(batch):
     chars_to_ignore_regex = '[\\\\\\\\\\\\\\\\؛\\\\\\\\\\\\\\\\—\\\\\\\\\\\\\\\\_get\\\\\\\\\\\\\\\\«\\\\\\\\\\\\\\\\»\\\\\\\\\\\\\\\\ـ\\\\\\\\\\\\\\\\ـ\\\\\\\\\\\\\\\\,\\\\\\\\\\\\\\\\?\\\\\\\\\\\\\\\\.\\\\\\\\\\\\\\\\!\\\\\\\\\\\\\\\\-\\\\\\\\\\\\\\\\;\\\\\\\\\\\\\\\\:\\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\\“\\\\\\\\\\\\\\\\%\\\\\\\\\\\\\\\\‘\\\\\\\\\\\\\\\\”\\\\\\\\\\\\\\\\�\\\\\\\\\\\\\\\\#\\\\\\\\\\\\\\\\،\\\\\\\\\\\\\\\\☭,\\\\\\\\\\\\\\\\؟]'
     batch["sentence"] = re.sub(chars_to_ignore_regex, '', batch["sentence"]).lower()
@@ -90,18 +102,6 @@ def fun_dv(batch):
 def fun_el(batch):
     chars_to_ignore_regex = '[\\\\\\\\,\\\\\\\\?\\\\\\\\.\\\\\\\\!\\\\\\\\-\\\\\\\\;\\\\\\\\:\\\\\\\\"\\\\\\\\“\\\\\\\\%\\\\\\\\‘\\\\\\\\”\\\\\\\\�]'
     batch["sentence"] = re.sub(chars_to_ignore_regex, '', batch["sentence"]).lower()
-    return batch
-
-
-def fun_en(batch):
-    sent = batch["sentence"].lower()
-    # normalize apostrophes
-    sent = sent.replace("’", "'")
-    # replace non-alpha characters with space
-    sent = "".join(ch if ch.isalpha() or ch == "'" else " " for ch in sent)
-    # remove repeated spaces
-    sent = " ".join(sent.split())
-    batch["sentence"] = sent
     return batch
 
 
